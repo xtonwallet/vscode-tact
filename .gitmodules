@@ -1,0 +1,3 @@
+[submodule "tact"]
+	path = tact
+	url = https://github.com/ton-core/tact.git
