@@ -136,7 +136,7 @@
             "name": "keyword.comment.todo"
         },
         "comment-line": {
-            "begin": "(?<!tp:)//",
+            "begin": "(?<!tp:)//[^/]",
             "end": "$",
             "name": "comment.line",
             "patterns": [
@@ -146,7 +146,7 @@
             ]
         },
         "comment-block": {
-            "begin": "/\\*",
+            "begin": "/\\*[^*]",
             "end": "\\*/",
             "name": "comment.block",
             "patterns": [
@@ -364,7 +364,7 @@
         "type-primitive": {
             "patterns": [
                 {
-                    "begin": "\\b(Int|Bool|Address|Slice|Cell|Builder|String|StringBuilder|[A-Z][^ ]*)\\b",
+                    "begin": "\\b(Int|Bool|Address|Slice|Cell|Builder|String|StringBuilder|(?<=: )[A-Z][^ ]*)\\b",
                     "beginCaptures": {
                         "1": {
                             "name": "support.type.primitive"
@@ -666,24 +666,6 @@
                             "name": "entity.name.type.interface"
                         }
                     }
-                },
-                {
-                    "begin": "\\b(interface)\\b\\s+(\\w+)\\b\\s+\\b(is)\\b\\s+",
-                    "end": "(?=\\{)",
-                    "beginCaptures": {
-                        "1": {
-                            "name": "storage.type.interface"
-                        },
-                        "2": {
-                            "name": "entity.name.type.interface"
-                        }
-                    },
-                    "patterns": [
-                        {
-                            "match": "\\b(\\w+)\\b",
-                            "name": "entity.name.type.interface.extend"
-                        }
-                    ]
                 }
             ]
         },

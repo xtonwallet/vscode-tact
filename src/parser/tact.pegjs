@@ -1176,7 +1176,7 @@ EmptyStatement
   = ";" { return { type: "EmptyStatement", start: location().start.offset, end: location().end.offset }; }
 
 ExpressionStatement
-  = !("{" / ContractToken / InterfaceToken / MessageToken / StructToken) expression:Expression EOS {
+  = !("{" / ContractToken / MessageToken / StructToken) expression:Expression EOS {
       return {
         type:       "ExpressionStatement",
         expression: expression,
@@ -1398,24 +1398,13 @@ PrimitiveStatement
   }
 
 TraitStatement
-  = TraitToken __ id:Identifier __ "{" __ body:SourceElements? __ "}"
+  = idInterface:("@"InterfaceToken __ "(\"" (Identifier / "." )* "\")" LineTerminator)?
+    TraitToken __ id:Identifier __ is:WithStatement? __ "{" __ body:SourceElements? __ "}"
   {
     return {
       type: "TraitStatement",
       name: id.name,
-      body: optionalList (body),
-      start: location().start.offset,
-      end: location().end.offset
-    }
-  }
-
-ContractStatement
-  = ContractToken __ id:Identifier __ is:WithStatement? __
-    "{" __ body:SourceElements? __ "}"
-  {
-    return {
-      type: "ContractStatement",
-      name: id.name,
+      id_Interface: idInterface != null ? idInterface[4]: [],
       is: is != null ? is.names : [],
       body: optionalList (body),
       start: location().start.offset,
@@ -1423,13 +1412,14 @@ ContractStatement
     }
   }
 
-InterfaceStatement
-  = InterfaceToken __ id:Identifier __ is:WithStatement? __
-    "{" __ body:SourceElements? __ "}"
+ContractStatement
+  = idInterface:("@"InterfaceToken __ "(\"" (Identifier / "." )* "\")" LineTerminator)?
+    ContractToken __ id:Identifier __ is:WithStatement? __ "{" __ body:SourceElements? __ "}"
   {
     return {
-      type: "InterfaceStatement",
+      type: "ContractStatement",
       name: id.name,
+      id_Interface: idInterface != null ? idInterface[4]: [],
       is: is != null ? is.names : [],
       body: optionalList (body),
       start: location().start.offset,
@@ -1733,7 +1723,6 @@ SourceUnit
   = ImportStatement
   / FunctionDeclaration
   / ContractStatement
-  / InterfaceStatement
   / MessageDeclaration
   / StructDeclaration
   / PrimitiveStatement
