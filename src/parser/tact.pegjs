@@ -1722,6 +1722,7 @@ SourceUnits
 SourceUnit
   = ImportStatement
   / FunctionDeclaration
+  / VariableStatement
   / ContractStatement
   / MessageDeclaration
   / StructDeclaration

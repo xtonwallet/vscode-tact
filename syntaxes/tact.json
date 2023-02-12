@@ -213,7 +213,7 @@
         "control-flow": {
             "patterns": [
                 {
-                    "match": "\\b(if|else|while|do|until|repeat|return|extends|mutates|native|let|const|self|is|initOf|map|primitive|as)\\b",
+                    "match": "\\b(if|else|while|do|until|repeat|return|extends|mutates|native|let|const|self|is|initOf|map|primitive|as|null)\\b",
                     "name": "keyword.control.flow"
                 }
             ]

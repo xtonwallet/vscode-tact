@@ -75,8 +75,12 @@
 			"body": "repeat(${1:index}) {\n\t$0\n}"
 		},
 		"receive declaration": {
-			"prefix": "receive",
+			"prefix": "rec",
 			"body": "receive(${1:name}) {\n\t$0\n}"
+		},
+		"context declaration": {
+			"prefix": "ctx",
+			"body": "let ctx: Context = context();"
 		}
 	}
 }

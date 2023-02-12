@@ -1,5 +1,4 @@
 'use strict';
-import * as fs from 'fs';
 import * as path from 'path';
 import {
     createConnection, Connection,
@@ -9,12 +8,14 @@ import {
     CompletionItem, Location,
     TextDocumentSyncKind, HoverParams, MarkupContent
 } from 'vscode-languageserver/node';
+import { DiagnosticSeverity } from 'vscode-languageserver';;
 import { TextDocument } from 'vscode-languageserver-textdocument';
 import { CompilerError } from './tactErrorsToDiagnostics';
 import { CompletionService } from './completionService';
 import { TactDefinitionProvider } from './definitionProvider';
 import { HoverService } from './hoverService';
 import { TactCompiler } from './tactCompiler';
+import { URI } from 'vscode-uri';
 
 interface Settings {
     tact: TactSettings;
@@ -58,8 +59,7 @@ async function validate(document: TextDocument) {
 
         try {
             if (enabledAsYouTypeErrorCheck) {
-                const errors: CompilerError[] = await tactCompiler
-                    .compileTactDocumentAndGetDiagnosticErrors(filePath, documentText);
+                const errors: CompilerError[] = await tactCompiler.compileTactDocumentAndGetDiagnosticErrors(filePath, documentText);
                 errors.forEach(errorItem => {
                     if (path.normalize(errorItem.fileName) === path.normalize(filePath)) {
                         compileErrorDiagnostics.push(errorItem.diagnostic);
@@ -82,12 +82,7 @@ connection.onCompletion((textDocumentPosition: TextDocumentPositionParams): Comp
     let completionItems: CompletionItem[] = [];
     const document = documents.get(textDocumentPosition.textDocument.uri);
     const service = new CompletionService(rootPath);
-
-    completionItems = completionItems.concat(
-        service.getAllCompletionItems( document,
-                                        textDocumentPosition.position,
-                                        )
-    );
+    completionItems = completionItems.concat(service.getAllCompletionItems( document, textDocumentPosition.position ));
     return completionItems;
 });
 
@@ -104,8 +99,30 @@ connection.onHover((textPosition: HoverParams): Hover => {
 });
 
 connection.onDefinition((handler: TextDocumentPositionParams): Thenable<Location | Location[] | undefined> | undefined => {
-    const provider = new TactDefinitionProvider(rootPath);
-    return provider.provideDefinition(documents.get(handler.textDocument.uri) as TextDocument, handler.position);
+    let provider: TactDefinitionProvider;
+    try {
+        provider = new TactDefinitionProvider(rootPath);
+        return provider.provideDefinition(documents.get(handler.textDocument.uri) as TextDocument, handler.position);
+    } catch(e: any) {
+        let error: String = e.message.match(/(.*) Contract: (.*) at Line: ([0-9]*), Column: ([0-9]*)/);
+        const compileErrorDiagnostics: Diagnostic[] = [];
+        compileErrorDiagnostics.push({
+            message: error[1],
+            range: {
+                end: {
+                    character: Number(error[4]).valueOf() + Number(error.length).valueOf() - 1,
+                    line: Number(error[3]).valueOf() - 1,
+                },
+                start: {
+                    character: Number(error[4]).valueOf() - 1,
+                    line: Number(error[3]).valueOf() - 1,
+                },
+            },
+            severity: DiagnosticSeverity.Error
+        });
+        const diagnostics = compileErrorDiagnostics;
+        connection.sendDiagnostics({diagnostics, uri: "file:///" + error[2]});
+    }
 });
 
 // This handler resolve additional information for the item selected in

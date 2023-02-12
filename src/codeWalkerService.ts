@@ -431,7 +431,7 @@ export class TactCodeWalker {
   public getSelectedContracts(documentText: string, offset: number, line: number): DocumentContract {
     let contracts : DocumentContract = new DocumentContract();
     try {
-        const result = this.tactparser.parse(documentText);
+        const result = this.tactparser.parse(documentText, "");
         let selectedElement = this.findElementByOffset(result.body, offset);
         result.body.forEach((element: any) => {       
             if (element.type === 'ContractStatement' || element.type == 'InterfaceStatement') {
@@ -458,7 +458,7 @@ export class TactCodeWalker {
   public getContracts(documentText: string): Contract2[] {
     let contracts : Contract2[] = [];
     try {
-        const result = this.tactparser.parse(documentText);
+        const result = this.tactparser.parse(documentText, "");
         result.body.forEach((element: any) => {
             if (element.type === 'ContractStatement' || element.type == 'InterfaceStatement') {
                 var contract = new Contract2();

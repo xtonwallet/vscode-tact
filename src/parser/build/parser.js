@@ -18367,15 +18367,18 @@ function peg$parse(input, options) {
     if (s0 === peg$FAILED) {
       s0 = peg$parseFunctionDeclaration();
       if (s0 === peg$FAILED) {
-        s0 = peg$parseContractStatement();
+        s0 = peg$parseVariableStatement();
         if (s0 === peg$FAILED) {
-          s0 = peg$parseMessageDeclaration();
+          s0 = peg$parseContractStatement();
           if (s0 === peg$FAILED) {
-            s0 = peg$parseStructDeclaration();
+            s0 = peg$parseMessageDeclaration();
             if (s0 === peg$FAILED) {
-              s0 = peg$parsePrimitiveStatement();
+              s0 = peg$parseStructDeclaration();
               if (s0 === peg$FAILED) {
-                s0 = peg$parseTraitStatement();
+                s0 = peg$parsePrimitiveStatement();
+                if (s0 === peg$FAILED) {
+                  s0 = peg$parseTraitStatement();
+                }
               }
             }
           }

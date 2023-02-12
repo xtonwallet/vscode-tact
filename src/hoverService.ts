@@ -145,6 +145,20 @@ const hoverDescription = {
             "```\namount: Int;\n```\n"
         ]
     },
+    "SendParameters": {
+        "pattern": "SendParameters",
+        "type": "global",
+        "description": [
+            "This function will prepare parameters for the message sending:\n",
+            "  bounce:bool\n",
+            "  to:address\n",
+            "  value:int257\n",
+            "  mode:int257\n",
+            "  body:Maybe ^cell\n",
+            "  code:Maybe ^cell\n",
+            "  data:Maybe ^cell"
+        ]
+    },
     "receive": {
         "pattern": "receive",
         "type": "global",

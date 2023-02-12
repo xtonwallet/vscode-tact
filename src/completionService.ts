@@ -737,7 +737,7 @@ export function GetGlobalFunctions(): CompletionItem[] {
         {
             detail: 'Calculate a new contract address',
             kind: CompletionItemKind.Property,
-            label: 'contractAddress(${1:StateInit})',
+            label: 'contractAddress(${1:initstate})',
         },
         {
             detail: 'Calculate a new address',

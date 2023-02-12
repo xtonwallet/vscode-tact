@@ -36,11 +36,11 @@ export class TactDefinitionProvider {
       contractPath,
       documentText
     );
+  
     // this contract
     const contract = contracts.contracts[0];
-
     const offset = document.offsetAt(position);
-    const result: any = tactparse.parse(documentText);
+    const result: any = tactparse.parse(documentText, contractPath);
     const element = this.findElementByOffset(result.body, offset);
 
     if (element !== undefined) {
@@ -56,7 +56,7 @@ export class TactDefinitionProvider {
           // find definition for inheritance
           const isBlock = this.findElementByOffset(element.is, offset);
           if (isBlock !== undefined) {
-             let directImport = this.findDirectImport(
+            let directImport = this.findDirectImport(
               document,
               result.body,
               isBlock.name,
@@ -77,21 +77,6 @@ export class TactDefinitionProvider {
           }
 
           // find definition in contract body recursively
-          const statement = this.findElementByOffset(element.body, offset);
-          if (statement !== undefined) {
-            return this.provideDefinitionInStatement(
-              document,
-              result.body,
-              statement,
-              element,
-              offset,
-              contracts,
-            );
-          }
-          break;
-        }
-        case 'LibraryStatement': {
-          // find definition in library body recursively
           const statement = this.findElementByOffset(element.body, offset);
           if (statement !== undefined) {
             return this.provideDefinitionInStatement(
@@ -275,7 +260,8 @@ export class TactDefinitionProvider {
         const elements = element.body.filter((contractElement: any) =>
           contractElement.name === name && (
             contractElement.type === 'FunctionDeclaration' ||
-            contractElement.type === 'StructDeclaration'
+            contractElement.type === 'StructDeclaration' ||
+            contractElement.type === 'MessageDeclaration'
           ),
         );
 
@@ -327,14 +313,24 @@ export class TactDefinitionProvider {
     const locations: vscode.Location[] = [];
     for (const contract of contracts.contracts) {
 
-      const result = tactparse.parse(contract.code);
+      const result = tactparse.parse(contract.code, contract.absolutePath);
       const elements =  Array.prototype.concat.apply([],
         result.body.map((element: any) => {
           if (element.type === 'ContractStatement') {
             if (typeof element.body !== 'undefined' && element.body !== null) {
               return extractElements(element);
             }
-          } 
+          }
+          if (element.type === 'StructDeclaration') {
+            if (typeof element.body !== 'undefined' && element.body !== null) {
+              return extractElements(element);
+            }
+          }
+          if (element.type === 'MessageDeclaration') {
+            if (typeof element.body !== 'undefined' && element.body !== null) {
+              return extractElements(element);
+            }
+          }
           return [];
         }),
       );
@@ -399,6 +395,7 @@ export class TactDefinitionProvider {
         literal.literal,
         'StructDeclaration',
       );
+
       if (structLocation !== undefined) {
         return Promise.resolve(structLocation);
       }
@@ -406,10 +403,15 @@ export class TactDefinitionProvider {
       // TODO: only search inheritance chain
       return this.provideDefinitionForContractMember(
         contracts,
-        (element) =>
-          element.body.filter((contractElement: any) =>
-            contractElement.name === literal.literal && (contractElement.type === 'StructDeclaration'),
-          ),
+        (element) => {
+          if (element.name === literal.literal && (element.type === 'StructDeclaration' || element.type === 'MessageDeclaration')) {
+            return element;
+          }
+          return element.body.filter((contractElement: any) => {
+              return contractElement.name === literal.literal && (contractElement.type === 'StructDeclaration' || contractElement.type === 'MessageDeclaration');
+            }
+          );
+        }
       );
     }
   }
@@ -446,7 +448,7 @@ export class TactDefinitionProvider {
       const importContract = contracts.contracts.find(e => e.absolutePath === importPath);
       const uri = URI.file(importContract?.absolutePath ?? "").toString();
       document = TextDocument.create(uri, "", 0, importContract?.code ?? "");
-      statements = tactparse.parse(importContract?.code ?? "").body;
+      statements = tactparse.parse(importContract?.code ?? "", importContract?.absolutePath ?? "").body;
       location = this.findStatementLocationByNameType(document, statements, name, type);
     }
 
