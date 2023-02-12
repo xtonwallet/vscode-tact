@@ -36,7 +36,7 @@ export class TactDefinitionProvider {
       contractPath,
       documentText
     );
-  
+
     // this contract
     const contract = contracts.contracts[0];
     const offset = document.offsetAt(position);

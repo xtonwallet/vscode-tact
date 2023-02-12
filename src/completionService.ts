@@ -126,6 +126,14 @@ export class CompletionService {
         return completionItem;
     }
     
+    public createMessageCompletionItem(contractElement: any, contractName: string | undefined): CompletionItem {
+        const completionItem =  CompletionItem.create(contractElement.name);
+        completionItem.kind = CompletionItemKind.Struct;
+        completionItem.insertText = contractElement.name;
+        completionItem.detail = '(Message in ' + contractName + ') ' + contractElement.name;
+        return completionItem;
+    }
+
     // type "Contract, Libray, Abstract contract"
     public createContractCompletionItem(contractName: string | undefined, type: string): CompletionItem {
         if (contractName == undefined) {
@@ -456,6 +464,8 @@ export class CompletionService {
 
         this.addAllStructsAsCompletionItems(selectedContract, completionItems);
 
+        this.addAllMessagesAsCompletionItems(selectedContract, completionItems);
+
         let selectedFunction = selectedContract.getSelectedFunction(offset);
 
         if (selectedFunction !== undefined) {
@@ -479,6 +489,14 @@ export class CompletionService {
         allStructs.forEach(item => {
             completionItems.push(
                 this.createStructCompletionItem(item.element, item.contract?.name));
+        });
+    }
+
+    private addAllMessagesAsCompletionItems(documentContractSelected: Contract2, completionItems: any[]) {
+        let allMessages = documentContractSelected.getAllMessages();
+        allMessages.forEach(item => {
+            completionItems.push(
+                this.createMessageCompletionItem(item.element, item.contract?.name));
         });
     }
 

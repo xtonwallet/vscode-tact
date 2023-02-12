@@ -81,6 +81,10 @@
 		"context declaration": {
 			"prefix": "ctx",
 			"body": "let ctx: Context = context();"
+		},
+		"documentation for function": {
+			"prefix": "doc",
+			"body": "//\n/// @notice What does it do?;\n///\n/// @param name - description;\n/// @return Struct - description;"
 		}
 	}
 }

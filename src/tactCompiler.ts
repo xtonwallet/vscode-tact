@@ -51,6 +51,7 @@ export class TactCompiler {
         let outputErrors: any = [];
         for (let i in rawErrors) {
             let error = rawErrors[i].split("\n");
+            if (error.length == 1 ) continue; 
             const match = Array.from(error[1].matchAll(/Line ([0-9]*), col ([0-9]*):/g)); //place 
             outputErrors.push({"severity": "Error", "message": error[error.length-1], "file": error[0], "length": 2, "line": match[0][1], "column": match[0][2]});
         }
@@ -60,9 +61,7 @@ export class TactCompiler {
     public async compileTactDocumentAndGetDiagnosticErrors(filePath: string, documentText: string) {
         if (this.isRootPathSet()) {
             const contracts = new ContractCollection();
-            contracts.addContractAndResolveImports(
-                filePath,
-                documentText);
+            contracts.addContractAndResolveImports(filePath, documentText);
             const contractsForCompilation = contracts.getDefaultContractsForCompilationDiagnostics();
             const output = await this.compile(contractsForCompilation);
             if (output) {
