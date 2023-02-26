@@ -168,6 +168,13 @@ const hoverDescription = {
             "a contract or trait."
         ]
     },
+    "require": {
+        "pattern": "require",
+        "type": "global",
+        "description": [
+            "fun require(condition: Bool, error: String);\nChecks condition and throws an exception with error message if condition is false."
+        ]
+    },
     "getConfigParam":  {
         "pattern": "getConfigParam",
         "type": "global",

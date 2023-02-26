@@ -30,7 +30,7 @@ export class TactCompiler {
 
         try {
             let ctx = new CompilerContext({ shared: {} });
-                ctx = precompile(ctx, args.file);
+                ctx = precompile(ctx, "", args.file);
         } catch(e: any) {
             return `${args.file}\n${e.message}`;
         }
@@ -51,9 +51,14 @@ export class TactCompiler {
         let outputErrors: any = [];
         for (let i in rawErrors) {
             let error = rawErrors[i].split("\n");
-            if (error.length == 1 ) continue; 
-            const match = Array.from(error[1].matchAll(/Line ([0-9]*), col ([0-9]*):/g)); //place 
-            outputErrors.push({"severity": "Error", "message": error[error.length-1], "file": error[0], "length": 2, "line": match[0][1], "column": match[0][2]});
+            if (error.length == 1) continue;
+            if (error.length == 2) {
+                outputErrors.push({"severity": "Error", "message": error[error.length-1], "file": error[0], "length": 2, "line": 1, "column": 1});
+            } else {
+                const match = Array.from(error[1].matchAll(/Line ([0-9]*), col ([0-9]*):/g)); //place
+                //@TODO we can determine length by ^~~~~
+                outputErrors.push({"severity": "Error", "message": error[error.length-1] + "\n" + error[error.length-2], "file": error[0], "length": 2, "line": match[0][1], "column": match[0][2]});
+            }
         }
         return outputErrors;
     }

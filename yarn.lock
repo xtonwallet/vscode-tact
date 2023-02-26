@@ -1560,6 +1560,11 @@ mkdirp-classic@^0.5.2, mkdirp-classic@^0.5.3:
   dependencies:
     minimist "^1.2.6"
 
+mkdirp@^2.1.3:
+  version "2.1.3"
+  resolved "https://registry.yarnpkg.com/mkdirp/-/mkdirp-2.1.3.tgz#b083ff37be046fd3d6552468c1f0ff44c1545d1f"
+  integrity sha512-sjAkg21peAG9HS+Dkx7hlG9Ztx7HLeKnvB3NQRcu/mltCVmvkF0pisbiTSfDVYTT86XEfZrTUosLdZLStquZUw==
+
 ms@2.1.2:
   version "2.1.2"
   resolved "https://registry.npmjs.org/ms/-/ms-2.1.2.tgz"
@@ -1767,6 +1772,11 @@ path-is-absolute@^1.0.0:
   version "1.0.1"
   resolved "https://registry.npmjs.org/path-is-absolute/-/path-is-absolute-1.0.1.tgz"
   integrity sha512-AVbw3UJ2e9bq64vSaS9Am0fje1Pa8pbGqTTsmXfaIiMpnr5DlDhfJOuLj9Sf95ZPVDAUerDfEk88MPmPe7UCQg==
+
+path-normalize@^6.0.10:
+  version "6.0.10"
+  resolved "https://registry.yarnpkg.com/path-normalize/-/path-normalize-6.0.10.tgz#35bef02035126fd99f1bb903afb6620dc1879a9b"
+  integrity sha512-ZlQRW8CAmppOuQB6+dVvkmzk4wGZRDtUmHeV+/596Bm+TYcuiAGV8EACc6hhRw4j3rdv5PimDOshXCqerHAtEA==
 
 path-parse@^1.0.7:
   version "1.0.7"
@@ -2229,6 +2239,13 @@ ton-core@>=0.44.0:
   dependencies:
     symbol.inspect "1.0.1"
 
+ton-core@^0.47.1:
+  version "0.47.1"
+  resolved "https://registry.yarnpkg.com/ton-core/-/ton-core-0.47.1.tgz#22298d79e345ea1a34825b4044dda5a7c5995474"
+  integrity sha512-XxcgLYH+Ngo3uh7O7jkzA0/O8nfG3WC3fgUmdvY9/IkGKpkO3Y/KHtrZgAOHYAkxJCmaXpi4aPf4JEnZEiPrWQ==
+  dependencies:
+    symbol.inspect "1.0.1"
+
 ton-crypto-primitives@2.0.0:
   version "2.0.0"
   resolved "https://registry.npmjs.org/ton-crypto-primitives/-/ton-crypto-primitives-2.0.0.tgz"
@@ -2245,10 +2262,10 @@ ton-crypto@^3.2.0:
     ton-crypto-primitives "2.0.0"
     tweetnacl "1.0.3"
 
-ton-emulator@^1.3.0:
-  version "1.6.0"
-  resolved "https://registry.npmjs.org/ton-emulator/-/ton-emulator-1.6.0.tgz"
-  integrity sha512-qRaU2mt5hYnHxRpP2lTw4bHBBbI2MRB2SaEu0fEQPx1VSMOEug8Cpc/ELvCizV2hLeeEBCHx5WxfpyWah4H4zA==
+ton-emulator@^2.1.1:
+  version "2.1.1"
+  resolved "https://registry.yarnpkg.com/ton-emulator/-/ton-emulator-2.1.1.tgz#1ffdcc41fafcb062ba600f243ebe81e5f038764e"
+  integrity sha512-/k0tB7VPQhJEn2KUwcYlIsLrUgRLnxMGvTSsYk3zsKLbc2HR0d/K7azzmxq9BqBpKPeopL27J1IYNqpSLqMvdA==
   dependencies:
     prando "^6.0.1"
     teslabot "^1.5.0"
@@ -2378,7 +2395,7 @@ tunnel@0.0.6:
 
 tvm-disassembler@^2.0.0:
   version "2.0.0"
-  resolved "https://registry.npmjs.org/tvm-disassembler/-/tvm-disassembler-2.0.0.tgz"
+  resolved "https://registry.yarnpkg.com/tvm-disassembler/-/tvm-disassembler-2.0.0.tgz#fd4f290764422035aa551f90ad56301c406fd3c0"
   integrity sha512-59WejM7BhGl0Z6H6ZFaUwrc0WixAzX9O9VX6qhUBoD+O2RcYA7zs1cYFTSDW5eOs40Fv4LuG4P6sdlF9YR11zw==
 
 tweetnacl@1.0.3:

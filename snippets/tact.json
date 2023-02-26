@@ -85,6 +85,10 @@
 		"documentation for function": {
 			"prefix": "doc",
 			"body": "//\n/// @notice What does it do?;\n///\n/// @param name - description;\n/// @return Struct - description;"
+		},
+		"require expression": {
+			"prefix": "req",
+			"body": "require(${1:Bool}, ${2:String});"
 		}
 	}
 }

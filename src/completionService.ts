@@ -779,9 +779,6 @@ export function GetContextualAutoCompleteByGlobalVariable(lineText: string, word
     if (isAutocompleteTrigeredByVariableName('math', lineText, wordEndPosition)) {
         return getMathCompletionItems();
     }
-    if (isAutocompleteTrigeredByVariableName('address', lineText, wordEndPosition)) {
-        return getAddressCompletionItems();
-    }
     if (isAutocompleteTrigeredByVariableName('context', lineText, wordEndPosition)) {
         return getContextCompletionItems();
     }
@@ -1018,26 +1015,6 @@ function getContextCompletionItems(): CompletionItem[] {
             label: 'raw',
         }
     ];
-}
-
-function getAddressCompletionItems(): CompletionItem[] {
-    return [
-        {
-            detail: 'Constructs an address of type addr_std with given workchain id wid and value address_value.',
-            kind: CompletionItemKind.Property,
-            label: 'makeAddrStd',
-        },
-        {
-            detail: 'Constructs an address of type addr_none.',
-            kind: CompletionItemKind.Property,
-            label: 'makeAddrNone',
-        },
-        {
-            detail: 'Constructs an address of type addr_extern with given value with bitCnt bit length.',
-            kind: CompletionItemKind.Property,
-            label: 'makeAddrExtern',
-        },
-    ]
 }
 
 function getMapCompletionItems(): CompletionItem[] {

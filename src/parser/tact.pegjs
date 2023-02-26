@@ -800,7 +800,7 @@ DeclarativeExpression
   }
 
 Mapping
-  = MappingToken __ "[" __ from:Type __ "]" __ to:Type __
+  = MappingToken __ "<" __ from:Type __ "," __ to:Type __ ">" __
   {
     return {
      type: "MappingExpression",
