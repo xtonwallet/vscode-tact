@@ -8,7 +8,7 @@ import {
     CompletionItem, Location,
     TextDocumentSyncKind, HoverParams, MarkupContent
 } from 'vscode-languageserver/node';
-import { DiagnosticSeverity } from 'vscode-languageserver';;
+import { DiagnosticSeverity, PublishDiagnosticsParams } from 'vscode-languageserver';;
 import { TextDocument } from 'vscode-languageserver-textdocument';
 import { CompilerError } from './tactErrorsToDiagnostics';
 import { CompletionService } from './completionService';
@@ -47,6 +47,7 @@ let validationDelay = 1500;
 // flags to avoid trigger concurrent validations (compiling is slow)
 let validatingDocument = false;
 let validatingAllDocuments = false;
+let documentsWithErrors: any = [];
 
 async function validate(document: TextDocument) {
     try {
@@ -55,23 +56,31 @@ async function validate(document: TextDocument) {
         const filePath = Files.uriToFilePath(uri) ?? "";
 
         const documentText = document.getText();
-        const compileErrorDiagnostics: Diagnostic[] = [];
-
         try {
             if (enabledAsYouTypeErrorCheck) {
                 const errors: CompilerError[] = await tactCompiler.compileTactDocumentAndGetDiagnosticErrors(filePath, documentText);
+                const compileErrorDiagnostics: any = {};
                 errors.forEach(errorItem => {
-                    if (path.normalize(errorItem.fileName) === path.normalize(filePath)) {
-                        compileErrorDiagnostics.push(errorItem.diagnostic);
+                    if (typeof compileErrorDiagnostics[errorItem.fileName] == "undefined") {
+                        compileErrorDiagnostics[errorItem.fileName] = [];
                     }
+                    compileErrorDiagnostics[errorItem.fileName].push(errorItem.diagnostic);
                 });
+                let newDocumentsWithErrors: any = [];
+                for (let fileName in compileErrorDiagnostics) {
+                    newDocumentsWithErrors.push(URI.file(fileName).path);
+                    connection.sendDiagnostics({diagnostics: compileErrorDiagnostics[fileName], uri: URI.file(fileName).path});
+                }
+                let difference = documentsWithErrors.filter((x: any) => !newDocumentsWithErrors.includes(x));
+                // if an error is resolved, we must to send empty diagnostics for the URI contained it;
+                for(let item in difference) {
+                    connection.sendDiagnostics({diagnostics: [], uri: difference[item]});
+                } 
+                documentsWithErrors = newDocumentsWithErrors;
             }
         } catch (e) {
             //console.log(JSON.stringify(e));
         }
-
-        const diagnostics = compileErrorDiagnostics;
-        connection.sendDiagnostics({diagnostics, uri});
     } finally {
         validatingDocument = false;
     }
@@ -159,6 +168,7 @@ documents.onDidOpen(event => {
 /*
 // Here issue with the previous content on the FS
 // Can be resolved by creating a temporary file
+*/
 documents.onDidChangeContent(event => {
     const document = event.document;
 
@@ -169,7 +179,6 @@ documents.onDidChangeContent(event => {
         setTimeout(() =>  validate(document), validationDelay);
     }
 });
-*/
 
 documents.onDidSave(event => {
     const document = event.document;

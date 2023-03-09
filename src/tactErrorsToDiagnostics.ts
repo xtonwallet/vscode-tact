@@ -23,7 +23,6 @@ export function errorToDiagnostic(error: any): CompilerError {
     let fileName = error.file;
     const errorMessage = error.message;
     const severity = getDiagnosticSeverity(error.severity);
-    
     return {
         diagnostic: {
             message: errorMessage,

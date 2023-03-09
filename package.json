@@ -4,7 +4,7 @@
   "description": "Tact language (for .tact file) extension to use together with Tact compiler for Visual Studio Code to develop smart contract for TON blockchain",
   "publisher": "ton-core",
   "icon": "icons/logo.png",
-  "version": "0.1.4",
+  "version": "0.1.5",
   "keywords": [
     "tact",
     "blockchain",
@@ -70,6 +70,7 @@
     "path-normalize": "^6.0.10",
     "pegjs": "^0.10.0",
     "require-from-string": "^2.0.2",
+    "rimraf": "^4.1.2",
     "semver": "^7.3.5",
     "string-width": "^4.2.2",
     "ton": "^13.1.0",
